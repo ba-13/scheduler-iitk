@@ -1,9 +1,12 @@
 export interface Card {
   row: number;
   col: number;
-  content: React.ReactNode;
+  courseTitle: string;
+  courseDetails: string;
+  color: string;
   span: number;
   id: string;
+  rest: Course;
 }
 
 export interface Course {

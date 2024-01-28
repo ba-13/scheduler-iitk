@@ -17,3 +17,7 @@ the algorithm would provide choices based on those constraints
 - module that takes in a set of courses with their timings and the amount of credits needed, and returns those sets which are compatible with each other. this module should be able to take some predefined/inserted courses and adjust according to that. It would not consider which type of courses are there, aka neglect any department or type of course.
 
 - create a UI that allows you to add or subtract interested courses, by providing from a pool. The pool should be served.
+
+## Known Issues
+
+- Currently I am ignoring that practical courses occupy multiple days a week even though may actually take up only one. Therefore any course that clashes with any of the practical slots will still be considered a clash.

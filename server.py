@@ -1,4 +1,4 @@
-from flask import Flask
+from flask import Flask, request
 import pandas as pd
 import re
 from flask_cors import CORS
@@ -20,7 +20,7 @@ def courses_route():
     return courses
 
 
-@app.route("/interested")
+@app.route("/current-interested")
 def interested_route():
     courses = []
     for course in alc.interested:
@@ -35,6 +35,30 @@ def meta_route():
         "startTime": alc.interested_start_hour,
         "endTime": alc.interested_end_hour,
     }
+
+
+@app.route("/not-interested", methods=["POST"])
+def notInterestedButtonRoute():
+    data = request.json
+    button_value = data["value"]
+    print("Received button value:", button_value)
+    alc.remove_interested_courses([button_value])
+    return f"Removed {button_value}"
+
+
+@app.route("/interested", methods=["POST"])
+def interestedButtonRoute():
+    data = request.json
+    button_value = data["value"]
+    print("Received button value:", button_value)
+    alc.add_interested_courses([button_value])
+    is_feasible, clash1, clash2 = alc.check_feasible()
+    return f"Removed {button_value}"
+
+
+@app.route("/next-interested")
+def nextInterestRoute():
+    return alc.generate_compatible_courses_given_interested()
 
 
 if __name__ == "__main__":

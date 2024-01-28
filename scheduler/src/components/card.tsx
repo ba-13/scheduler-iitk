@@ -19,7 +19,7 @@ const CourseCard: React.FC<CourseCardProps> = ({
       title={details}
       className="course-card"
       style={{
-        backgroundColor: `var(--card-color-${color})`,
+        backgroundColor: color,
         height: `calc(26px * ${span})`,
         lineHeight: `calc(26px * ${span})`,
       }}

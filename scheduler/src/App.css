@@ -21,12 +21,17 @@
 .course-selection {
   display: flex;
   flex-direction: column;
-  justify-content: space-around;
 }
 
 .calendar-container {
   max-height: 30rem;
   overflow-y: auto;
+  border-top: 2px solid rgb(0, 255, 64);
+  border-bottom: 2px solid rgb(0, 255, 64);
+}
+
+#select-valid-courses {
+  margin-bottom: 5rem;
 }
 
 /* tablet breakpoint */

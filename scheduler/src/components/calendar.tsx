@@ -1,6 +1,7 @@
 import React from "react";
 import "./calendar.css";
 import { Card } from "../interfaces";
+import CourseCard from "./card";
 
 interface CalendarProps {
   numRows: number;
@@ -54,7 +55,12 @@ const Calendar: React.FC<CalendarProps> = ({
         if (card) {
           return (
             <td key={colIndex} className="card-cell">
-              {card.content}
+              <CourseCard
+                courseName={card.courseTitle}
+                details={card.courseDetails}
+                color={card.color}
+                span={card.span}
+              ></CourseCard>
             </td>
           );
         } else {

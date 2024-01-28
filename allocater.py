@@ -47,11 +47,11 @@ class Allocater:
         self.courses_list: list[str] = []
         self.courses_set: set[str] = set()  # contains course_number
         self.course_to_idx: dict[str, int] = {}
-        self.interested = set()  # contains course_number
+        self.interested: set[str] = set()  # contains course_number
         self.timings = -np.ones(len(self.DAYS_TO_INDEX) * 24 * 4, dtype=np.int16)
-        self.credits_considered_ = 0
+        self.credits_considered_: int = 0
         # used when generating for all possible schedules given interested
-        self.all_possible = []
+        self.all_possible: list[str] = []
         self.minimum_credits = 27
         self.maximum_credits = 65
 
@@ -249,4 +249,16 @@ class Allocater:
         self.all_possible = []
         extra_courses = sorted(list(self.courses_set.difference(self.interested)))
         self.generate_all_possible__(extra_courses, 0)
+        return self.all_possible
+
+    def generate_compatible_courses_given_interested(self):
+        del self.all_possible
+        self.all_possible = []
+        extra_courses = sorted(list(self.courses_set.difference(self.interested)))
+        for course_number in extra_courses:
+            self.add_interested_courses([course_number])
+            feasible, c1, c2 = self.check_feasible()
+            if feasible:
+                self.all_possible.append(course_number)
+            self.remove_interested_courses([course_number])
         return self.all_possible
