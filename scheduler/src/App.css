@@ -1,0 +1,38 @@
+#root {
+  max-width: 1280px;
+  margin: 0 auto;
+  padding: 2rem;
+  text-align: center;
+}
+
+/* container */
+.left-sidebar {
+  position: relative;
+  display: grid;
+  grid-template-columns: 1fr 1.8fr;
+  gap: 1rem;
+}
+
+.introduction {
+  margin: 1rem;
+  margin-bottom: 2rem;
+}
+
+.course-selection {
+  display: flex;
+  flex-direction: column;
+  justify-content: space-around;
+}
+
+.calendar-container {
+  max-height: 30rem;
+  overflow-y: auto;
+}
+
+/* tablet breakpoint */
+@media (max-width: 360px) {
+  .left-sidebar {
+    grid-template-rows: 1fr 2fr;
+    grid-template-columns: auto;
+  }
+}

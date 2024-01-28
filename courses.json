@@ -1,0 +1,210 @@
+[
+    {
+        "number": "AE211",
+        "name": "INCOMPRESSIBLE AERODYNAMICS",
+        "credit": 9,
+        "types": [
+            "DC",
+            "REGULAR"
+        ],
+        "professors": [
+            "Arun Perumal(I)"
+        ],
+        "timetable": [
+            "M 09:00-10:00",
+            "W 09:00-10:00",
+            "F 09:00-10:00"
+        ]
+    },
+    {
+        "number": "AE341A",
+        "name": "EXPERIMENTS IN AEROSPACE ENGINEERING",
+        "credit": 5,
+        "types": [
+            "DC",
+            "SECOND-HALF"
+        ],
+        "professors": [
+            "RAJESH KITEY",
+            "Ajay Singh(O)",
+            "Tufan Guha(O)"
+        ],
+        "timetable": [
+            "F 14:00-17:00"
+        ]
+    },
+    {
+        "number": "AE462A",
+        "name": "AIRCRAFT DESIGN-II",
+        "credit": 4,
+        "types": [
+            "DC",
+            "REGULAR"
+        ],
+        "professors": [
+            "Gopalkrishna M Kamath (I)"
+        ],
+        "timetable": [
+            "Th 08:00-09:00",
+            "Th 15:00-17:00"
+        ]
+    },
+    {
+        "number": "AE608",
+        "name": "HEAT TRANSFER IN AEROSPACE APPLICATIONS",
+        "credit": 9,
+        "types": [
+            "PRF",
+            "REGULAR"
+        ],
+        "professors": [
+            "Mohammed Ibrahim Sugarno(I)",
+            "Ajay Singh(O)"
+        ],
+        "timetable": [
+            "T 09:00-10:15",
+            "M 12:00-13:15"
+        ]
+    },
+    {
+        "number": "BSE222",
+        "name": "BIOCHEMICAL ENGINEERING",
+        "credit": 9,
+        "types": [
+            "DC",
+            "REGULAR"
+        ],
+        "professors": [
+            "ASHOK KUMAR (I)"
+        ],
+        "timetable": [
+            "M 10:00-11:00",
+            "T 10:00-11:00",
+            "F 10:00-11:00"
+        ]
+    },
+    {
+        "number": "EE320A",
+        "name": "PRINCIPLES OF COMMUNICATION",
+        "credit": 11,
+        "types": [
+            "PRF",
+            "DC",
+            "Minor",
+            "REGULAR"
+        ],
+        "professors": [
+            "KASTURI VASUDEVAN (I)"
+        ],
+        "timetable": [
+            "T 08:00-09:00",
+            "W 08:00-09:00",
+            "Th 08:00-09:00"
+        ]
+    },
+    {
+        "number": "EE330A",
+        "name": "POWER SYSTEMS",
+        "credit": 11,
+        "types": [
+            "PRF",
+            "DC",
+            "Minor",
+            "REGULAR"
+        ],
+        "professors": [
+            "Swathi Battula(I)"
+        ],
+        "timetable": [
+            "M 08:00-09:00",
+            "F 08:00-09:00",
+            "T 09:00-10:00"
+        ]
+    },
+    {
+        "number": "EE370A",
+        "name": "DIGITAL ELECTRONICS",
+        "credit": 11,
+        "types": [
+            "PRF",
+            "DC",
+            "Minor",
+            "REGULAR"
+        ],
+        "professors": [
+            "Rik Dey(I)"
+        ],
+        "timetable": [
+            "M 11:00-12:00",
+            "W 11:00-12:00",
+            "F 11:00-12:00"
+        ]
+    },
+    {
+        "number": "EE380A",
+        "name": "ELECTRICAL ENGINEERING LAB I",
+        "credit": 12,
+        "types": [
+            "PRF",
+            "DC",
+            "REGULAR"
+        ],
+        "professors": [
+            "YATINDRA NATH SINGH (I)"
+        ],
+        "timetable": [
+            "T 12:00-13:00",
+            "F 16:00-17:00",
+            "Th 17:00-18:00",
+            "M 14:00-17:00",
+            "T 14:00-17:00",
+            "W 14:00-17:00",
+            "Th 14:00-17:00"
+        ]
+    },
+    {
+        "number": "EE390A",
+        "name": "ELECTRICAL ENGINEERING COMMUNICATION SKILLS",
+        "credit": 2,
+        "types": [
+            "PRF",
+            "DC",
+            "REGULAR"
+        ],
+        "professors": [
+            "ADRISH BANERJEE(I)"
+        ],
+        "timetable": [
+            "T 10:00-12:00"
+        ]
+    },
+    {
+        "number": "EE391A",
+        "name": "ELECTRICAL ENGINEERING UNDERGRADUATE PROJECT I",
+        "credit": 4,
+        "types": [
+            "UGP-I",
+            "REGULAR"
+        ],
+        "professors": [
+            "DUGCEE (I)"
+        ],
+        "timetable": []
+    },
+    {
+        "number": "CS771A",
+        "name": "INTRODUCTION TO MACHINE LEARNING",
+        "credit": 9,
+        "types": [
+            "PRF",
+            "REGULAR"
+        ],
+        "professors": [
+            "PIYUSH RAI (I)"
+        ],
+        "timetable": [
+            "M 18:00-19:15",
+            "Th 18:00-19:15"
+        ]
+    }
+]

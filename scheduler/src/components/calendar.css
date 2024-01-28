@@ -1,0 +1,38 @@
+body {
+  font-family: monospace;
+  font-size: 1rem;
+}
+
+.calendar {
+  /* border-collapse: collapse; */
+}
+
+.calendar td {
+  position: relative;
+  min-width: 120px;
+  height: 25px;
+  padding: 0px 10px 0px 0px; /* Add padding to cells */
+  border: 1px solid #ddd; /* Add borders between cells */
+}
+
+.calendar td > * {
+  top: 0px;
+  left: 0px;
+  position: absolute;
+}
+
+.time-cell {
+  font-family: Impact, Haettenschweiler, "Arial Narrow Bold", sans-serif;
+  font-size: 0.8rem;
+  display: flex;
+  flex-direction: column;
+}
+
+.time-cell,
+.day-cell {
+  background-color: darkblue;
+}
+
+.card-cell {
+  font-size: 0.9rem;
+}

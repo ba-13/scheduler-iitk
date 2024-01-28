@@ -1,0 +1,14 @@
+:root {
+  --card-color-blue: blue;
+  --card-color-red: red;
+  --card-color-green: green;
+}
+
+.course-card {
+  max-width: 80px;
+  padding: 0px 20px 0px 20px;
+  border-radius: 0px 5px 5px 0px;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+  color: white;
+  z-index: 1;
+}
