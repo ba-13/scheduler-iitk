@@ -7,7 +7,7 @@ The major constraint on choosing courses are:
 - Courses must belong to the current semester
 - Chosen courses must not clash according to the timetable
 
-![preview](./preview.png)
+![preview](./assets/preview.png)
 
 ## TODO
 
