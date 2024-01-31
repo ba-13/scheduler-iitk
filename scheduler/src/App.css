@@ -34,6 +34,19 @@
   margin-bottom: 5rem;
 }
 
+#remove-button {
+  margin-top: 2rem;
+  display: flex;
+  flex-direction: column;
+}
+
+.line {
+  height: 1px;
+  max-width: 5rem;
+  background-color: white;
+  margin: 1rem 0;
+}
+
 /* tablet breakpoint */
 @media (max-width: 360px) {
   .left-sidebar {

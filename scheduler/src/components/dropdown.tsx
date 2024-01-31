@@ -3,7 +3,7 @@ import "./dropdown.css";
 
 interface CourseDropDownProps {
   interests: Array<string>;
-  handleClick: (value: string, api: string) => void;
+  handleClick: (value: Array<string>, api: string) => void;
 }
 
 const CourseDropDown: React.FC<CourseDropDownProps> = ({
@@ -16,7 +16,7 @@ const CourseDropDown: React.FC<CourseDropDownProps> = ({
       {interests.map((uniqueCard) => {
         return (
           <option
-            onClick={() => handleClick(uniqueCard, "/api/interested")}
+            onClick={() => handleClick([uniqueCard], "/api/interested")}
             key={uniqueCard}
           >
             {uniqueCard}

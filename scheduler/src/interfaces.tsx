@@ -16,4 +16,6 @@ export interface Course {
   types: Array<string>;
   professors: Array<string>;
   timetable: Array<Array<number>>;
+  id: number;
+  department: string;
 }

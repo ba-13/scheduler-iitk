@@ -3,13 +3,13 @@ import pandas as pd
 import re
 from flask_cors import CORS
 from allocater import Allocater
+from threading import RLock
 
 app = Flask(__name__)
 CORS(app)  # This will enable CORS for all routes
 
-alc = Allocater("./courses.json")
-alc.add_interested_courses(["EE320A", "EE330A", "EE370A", "EE380A", "EE390A"])
-is_feasible, clash1, clash2 = alc.check_feasible()
+alc = Allocater("./all_courses.json")
+alc_lock = RLock()
 
 
 @app.route("/courses")
@@ -42,7 +42,8 @@ def notInterestedButtonRoute():
     data = request.json
     button_value = data["value"]
     print("Received button value:", button_value)
-    alc.remove_interested_courses([button_value])
+    with alc_lock:
+        alc.remove_interested_courses(button_value)
     return f"Removed {button_value}"
 
 
@@ -51,14 +52,16 @@ def interestedButtonRoute():
     data = request.json
     button_value = data["value"]
     print("Received button value:", button_value)
-    alc.add_interested_courses([button_value])
-    is_feasible, clash1, clash2 = alc.check_feasible()
+    with alc_lock:
+        alc.add_interested_courses(button_value)
     return f"Removed {button_value}"
 
 
 @app.route("/next-interested")
 def nextInterestRoute():
-    return alc.generate_compatible_courses_given_interested()
+    with alc_lock:
+        result = alc.generate_compatible_courses_given_interested()
+    return result
 
 
 if __name__ == "__main__":

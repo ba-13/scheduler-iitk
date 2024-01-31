@@ -1,2 +1,5 @@
 node_modules
 __pycache__
+*.log
+all_courses.json
+Course_Schedule*.pdf

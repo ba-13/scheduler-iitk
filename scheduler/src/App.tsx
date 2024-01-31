@@ -72,6 +72,13 @@ async function fetchCourses(
   }
 }
 
+function departmentFromNumber(courseNumber: string) {
+  const val = courseNumber.match(/^[A-Z]+/);
+  if (val == null)
+    console.error(`Could not find department in ${courseNumber}`);
+  else return val[0];
+}
+
 const extractDigits = (str: string) => {
   const matches = str.match(/\d+/);
   return matches ? Number(matches[0]) : 449;
@@ -136,7 +143,7 @@ async function fetchNextInterest(
 
 const App: React.FC = () => {
   const [meta, setMeta] = useState<Meta>({
-    numCols: 3,
+    numCols: 4,
     startTime: 420,
     numRows: 53,
   });
@@ -144,7 +151,7 @@ const App: React.FC = () => {
   let [courses, setCourses] = useState<Array<Course>>([]);
   let [nextInterest, setNextInterest] = useState<Array<string>>([]);
 
-  const handleClick = async (value: string, api: string) => {
+  const handleClick = async (value: Array<string>, api: string) => {
     try {
       await fetch(api, {
         method: "POST",
@@ -191,15 +198,31 @@ const App: React.FC = () => {
                 return (
                   <button
                     key={course.number}
-                    onClick={() =>
-                      handleClick(course.number, "/api/not-interested")
-                    }
+                    title="Click to Remove"
+                    onClick={() => {
+                      handleClick([course.number], "/api/not-interested");
+                      const idx = cards.indexOf(foundCard);
+                      cards.splice(idx, 1);
+                      setCards(cards);
+                    }}
                   >
                     {course.number}
                   </button>
                 );
               }
             })}
+          </div>
+          <div id="remove-button">
+            <button
+              onClick={() => {
+                let courseList = cards.map((card) => {
+                  return card.id;
+                });
+                handleClick(courseList, "/api/not-interested");
+              }}
+            >
+              Remove All Selected
+            </button>
           </div>
         </div>
         <div className="calendar-container">

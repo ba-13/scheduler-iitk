@@ -1,16 +1,13 @@
-# Scheduler IITK
+# Academic-flexibility Scheduler IITK
 
-This is a project meant to help students choose their courses in an easier fashion.
+This is a project meant to help students choose their courses in a more easier fashion.
 
-You would need to provide your department and current semester you're in.
+The major constraint on choosing courses are:
 
-The major constraints on choosing courses are:
+- Courses must belong to the current semester
+- Chosen courses must not clash according to the timetable
 
-- Chosen courses must not clash
-- Courses should follow the default template by default
-- If provided amount of credits, the template would try adjusting to the number of credits
-- If you want course flexiblity (due to better grading or interests), you can provide the courses, and
-the algorithm would provide choices based on those constraints
+![preview](./preview.png)
 
 ## TODO
 
@@ -18,6 +15,26 @@ the algorithm would provide choices based on those constraints
 
 - create a UI that allows you to add or subtract interested courses, by providing from a pool. The pool should be served.
 
+- Create the PDF parsing system to generate the JSON file
+
+- <https://stackoverflow.com/questions/75980179/how-can-i-serve-a-react-app-from-flask-backend>
+
 ## Known Issues
 
 - Currently I am ignoring that practical courses occupy multiple days a week even though may actually take up only one. Therefore any course that clashes with any of the practical slots will still be considered a clash.
+- During re-rendering upon page-reload, a random card gets added during the second phase of strict mode. This actually is not present in the server and therefore not taken into account as a legit course. Please clear all courses before starting to scheduler until the bug gets fixed.
+
+## Solved Issues
+
+- During development, aka in React Strict Mode, every request within render happens twice, this leads to interference of the first request processing, due to effects similar to state machines, therefore use blocking locks
+
+## Future work
+
+Possible functionalities:
+
+- The courses you select provides a prior to what kind of courses you would want to take up, which should be recommended first. Make the selection bar more intelligent.
+
+## References
+
+- [Locking to prevent multiple simultaneous requests changing state](https://stackoverflow.com/questions/43999611/flask-suspend-other-requests-while-a-certain-one-is-being-handled)
+- [Strict Mode React](https://stackoverflow.com/questions/68914256/react-request-to-api-trigger-two-times-the-then-block-the-request-is-sended-tw)

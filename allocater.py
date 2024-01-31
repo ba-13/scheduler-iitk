@@ -25,6 +25,8 @@ class Course:
     types: "list[str]"
     professors: "list[str]"
     timetable: "list[tuple[int, int]]"
+    department: str
+    id: int
 
     @classmethod
     def from_dict(cls, dictionary):
@@ -68,7 +70,7 @@ class Allocater:
             self.course_to_idx[course.number] = idx
         del parsed_json
         self.interested_start_hour = 7
-        self.interested_end_hour = 20
+        self.interested_end_hour = 21
         logger.info(self.courses_list)
 
     def add_interested_courses(self, interested_courses: list):
@@ -144,7 +146,7 @@ class Allocater:
                     clashing_idx = self.timings[idx]
                     clashing_number = self.courses_list[clashing_idx]
                     self.timings[idx] = -2
-                    logger.error(
+                    logger.debug(
                         f"found clash at {self.mins_to_readable_time(idx * 15)} by {course_number} and {clashing_number}"
                     )
                     return (False, course_number, clashing_number)
