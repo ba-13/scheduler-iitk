@@ -19,6 +19,10 @@ The major constraint on choosing courses are:
 
 - <https://stackoverflow.com/questions/75980179/how-can-i-serve-a-react-app-from-flask-backend>
 
+- Seperate the courses by classifying them over department. This should be done at the server end, and in frontend, the choice of department would decide the next-interested courses.
+
+- Dockerize and host
+
 ## Known Issues
 
 - Currently I am ignoring that practical courses occupy multiple days a week even though may actually take up only one. Therefore any course that clashes with any of the practical slots will still be considered a clash.

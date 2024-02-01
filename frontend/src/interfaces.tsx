@@ -1,4 +1,4 @@
-export interface Card {
+export interface CurrentCourse {
   row: number;
   col: number;
   courseTitle: string;

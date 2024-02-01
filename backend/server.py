@@ -1,6 +1,4 @@
-from flask import Flask, request
-import pandas as pd
-import re
+from flask import Flask, request, send_from_directory
 from flask_cors import CORS
 from allocater import Allocater
 from threading import RLock
@@ -10,9 +8,10 @@ CORS(app)  # This will enable CORS for all routes
 
 alc = Allocater("./all_courses.json")
 alc_lock = RLock()
+dist_path = "./dist"
 
 
-@app.route("/courses")
+@app.route("/api/courses")
 def courses_route():
     courses = []
     for _, course in alc.courses.items():
@@ -20,7 +19,7 @@ def courses_route():
     return courses
 
 
-@app.route("/current-interested")
+@app.route("/api/current-interested")
 def interested_route():
     courses = []
     for course in alc.interested:
@@ -28,7 +27,7 @@ def interested_route():
     return courses
 
 
-@app.route("/meta")
+@app.route("/api/meta")
 def meta_route():
     return {
         "days": 5,
@@ -37,7 +36,7 @@ def meta_route():
     }
 
 
-@app.route("/not-interested", methods=["POST"])
+@app.route("/api/not-interested", methods=["POST"])
 def notInterestedButtonRoute():
     data = request.json
     button_value = data["value"]
@@ -47,7 +46,7 @@ def notInterestedButtonRoute():
     return f"Removed {button_value}"
 
 
-@app.route("/interested", methods=["POST"])
+@app.route("/api/interested", methods=["POST"])
 def interestedButtonRoute():
     data = request.json
     button_value = data["value"]
@@ -57,12 +56,23 @@ def interestedButtonRoute():
     return f"Removed {button_value}"
 
 
-@app.route("/next-interested")
+@app.route("/api/next-interested")
 def nextInterestRoute():
     with alc_lock:
         result = alc.generate_compatible_courses_given_interested()
     return result
 
 
+@app.route("/")
+def serve_html():
+    return send_from_directory(dist_path, "index.html")
+
+
+# Route to serve static files (CSS, JS, etc.)
+@app.route("/<path:filename>")
+def serve_static(filename):
+    return send_from_directory(dist_path, filename)
+
+
 if __name__ == "__main__":
-    app.run(debug=True, port=3000)
+    app.run(debug=True, port=3000, host="0.0.0.0")

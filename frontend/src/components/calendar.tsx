@@ -1,12 +1,12 @@
 import React from "react";
 import "./calendar.css";
-import { Card } from "../interfaces";
+import { CurrentCourse } from "../interfaces";
 import CourseCard from "./card";
 
 interface CalendarProps {
   numRows: number;
   numCols: number;
-  cards: Card[];
+  currentCourses: CurrentCourse[];
   startTime: number;
 }
 
@@ -22,14 +22,14 @@ function mins_to_readable_time(mins: number) {
 const Calendar: React.FC<CalendarProps> = ({
   numRows,
   numCols,
-  cards,
+  currentCourses,
   startTime,
 }) => {
   const days = ["M", "T", "W", "Th", "F"];
   const rows = Array.from({ length: numRows }, (_, rowIndex) => (
     <tr key={rowIndex}>
       {Array.from({ length: numCols }, (_, colIndex) => {
-        const card = cards.find(
+        const card = currentCourses.find(
           (c) => c.row === rowIndex && c.col === colIndex
         );
         if (colIndex == 0 && rowIndex == 0) {

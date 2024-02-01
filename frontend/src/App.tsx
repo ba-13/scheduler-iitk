@@ -1,6 +1,6 @@
 import "./App.css";
 import React, { useState, useEffect } from "react";
-import { Course, Card } from "./interfaces";
+import { Course, CurrentCourse } from "./interfaces";
 import Calendar from "./components/calendar";
 import CourseDropDown from "./components/dropdown";
 
@@ -72,12 +72,14 @@ async function fetchCourses(
   }
 }
 
+/*
 function departmentFromNumber(courseNumber: string) {
   const val = courseNumber.match(/^[A-Z]+/);
   if (val == null)
     console.error(`Could not find department in ${courseNumber}`);
   else return val[0];
 }
+*/
 
 const extractDigits = (str: string) => {
   const matches = str.match(/\d+/);
@@ -86,10 +88,10 @@ const extractDigits = (str: string) => {
 
 async function fetchCurrentInterested(
   meta: Meta,
-  setCards: React.Dispatch<React.SetStateAction<Card[]>>
+  setCurrentCourses: React.Dispatch<React.SetStateAction<CurrentCourse[]>>
 ) {
   try {
-    let cards = Array<Card>();
+    let currentCourses = Array<CurrentCourse>();
     const data = await api<Array<Course>>("/api/current-interested");
     data.forEach((course) => {
       course.timetable.forEach((timing) => {
@@ -112,7 +114,7 @@ async function fetchCurrentInterested(
         const row = startIdx + 1;
         const courseTitle = `${course.number}(${course.credit})`;
         const courseDetails = `${course.name}`;
-        cards.push({
+        currentCourses.push({
           row: row,
           col: col,
           span: span,
@@ -124,7 +126,7 @@ async function fetchCurrentInterested(
         });
       });
     });
-    setCards(cards);
+    setCurrentCourses(currentCourses);
   } catch (error) {
     console.error("Failed fetching interested courses:", error);
   }
@@ -147,7 +149,7 @@ const App: React.FC = () => {
     startTime: 420,
     numRows: 53,
   });
-  let [cards, setCards] = useState<Array<Card>>([]);
+  let [currentCourses, setCurrentCourses] = useState<Array<CurrentCourse>>([]);
   let [courses, setCourses] = useState<Array<Course>>([]);
   let [nextInterest, setNextInterest] = useState<Array<string>>([]);
 
@@ -163,13 +165,13 @@ const App: React.FC = () => {
     } catch (error) {
       console.error("Error:", error);
     }
-    fetchCurrentInterested(meta, setCards);
+    fetchCurrentInterested(meta, setCurrentCourses);
     fetchNextInterest(setNextInterest);
   };
 
   useEffect(() => {
     fetchMeta(setMeta);
-    fetchCurrentInterested(meta, setCards);
+    fetchCurrentInterested(meta, setCurrentCourses);
     fetchCourses(setCourses);
     fetchNextInterest(setNextInterest);
   }, []);
@@ -193,7 +195,9 @@ const App: React.FC = () => {
           <div className="course-selection-title">Added Courses</div>
           <div>
             {courses.map((course) => {
-              const foundCard = cards.find((card) => card.id === course.number);
+              const foundCard = currentCourses.find(
+                (card) => card.id === course.number
+              );
               if (foundCard) {
                 return (
                   <button
@@ -201,9 +205,9 @@ const App: React.FC = () => {
                     title="Click to Remove"
                     onClick={() => {
                       handleClick([course.number], "/api/not-interested");
-                      const idx = cards.indexOf(foundCard);
-                      cards.splice(idx, 1);
-                      setCards(cards);
+                      const idx = currentCourses.indexOf(foundCard);
+                      currentCourses.splice(idx, 1);
+                      setCurrentCourses(currentCourses);
                     }}
                   >
                     {course.number}
@@ -215,7 +219,7 @@ const App: React.FC = () => {
           <div id="remove-button">
             <button
               onClick={() => {
-                let courseList = cards.map((card) => {
+                let courseList = currentCourses.map((card) => {
                   return card.id;
                 });
                 handleClick(courseList, "/api/not-interested");
@@ -229,7 +233,7 @@ const App: React.FC = () => {
           <Calendar
             numRows={meta.numRows}
             numCols={meta.numCols}
-            cards={cards}
+            currentCourses={currentCourses}
             startTime={meta.startTime}
           ></Calendar>
         </div>

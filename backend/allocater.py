@@ -1,9 +1,7 @@
 from tabulate import tabulate
 import time
 from dataclasses import dataclass, asdict
-from functools import cmp_to_key
 import numpy as np
-from enum import Enum
 import json
 import logging
 
