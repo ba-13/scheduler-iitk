@@ -1,6 +1,7 @@
 # Academic-flexibility Scheduler IITK
 
-This is a project meant to help students choose their courses in a more easier fashion.
+This is a project meant to help students choose their courses in a more easier fashion.  
+Find it at [scheduler-iitk.onrender.com](https://scheduler-iitk.onrender.com/)
 
 The major constraint on choosing courses are:
 
@@ -9,34 +10,21 @@ The major constraint on choosing courses are:
 
 ![preview](./assets/preview.png)
 
-## TODO
-
-- module that takes in a set of courses with their timings and the amount of credits needed, and returns those sets which are compatible with each other. this module should be able to take some predefined/inserted courses and adjust according to that. It would not consider which type of courses are there, aka neglect any department or type of course.
-
-- create a UI that allows you to add or subtract interested courses, by providing from a pool. The pool should be served.
-
-- Create the PDF parsing system to generate the JSON file
-
-- <https://stackoverflow.com/questions/75980179/how-can-i-serve-a-react-app-from-flask-backend>
-
-- Seperate the courses by classifying them over department. This should be done at the server end, and in frontend, the choice of department would decide the next-interested courses.
-
-- Dockerize and host
-
 ## Known Issues
 
 - Currently I am ignoring that practical courses occupy multiple days a week even though may actually take up only one. Therefore any course that clashes with any of the practical slots will still be considered a clash.
 - During re-rendering upon page-reload, a random card gets added during the second phase of strict mode. This actually is not present in the server and therefore not taken into account as a legit course. Please clear all courses before starting to scheduler until the bug gets fixed.
+- The codebase is not memory optimized, which leads to delays for every usage due to free hosting service used.
 
 ## Solved Issues
 
 - During development, aka in React Strict Mode, every request within render happens twice, this leads to interference of the first request processing, due to effects similar to state machines, therefore use blocking locks
+- Included session-management to make all users independent of each other, and have a session last for a user even after closing the request, as cookies.
 
 ## Future work
 
-Possible functionalities:
-
 - The courses you select provides a prior to what kind of courses you would want to take up, which should be recommended first. Make the selection bar more intelligent.
+- The courses should be distributed according to departments, which should be another dropdown chosen before the course itself.
 
 ## References
 
