@@ -42,12 +42,13 @@ class Allocater:
     INDEX_TO_DAYS = {0: "M", 1: "T", 2: "W", 3: "Th", 4: "F"}
     NULL_STRING = "NA"
 
-    def __init__(self, json_path) -> None:
+    def __init__(self, json_path, init_interested: list = []) -> None:
         self.courses: "dict[str, Course]" = {}
         self.courses_list: list[str] = []
         self.courses_set: set[str] = set()  # contains course_number
         self.course_to_idx: dict[str, int] = {}
         self.interested: set[str] = set()  # contains course_number
+        self.add_interested_courses(init_interested)
         self.timings = -np.ones(len(self.DAYS_TO_INDEX) * 24 * 4, dtype=np.int16)
         self.credits_considered_: int = 0
         # used when generating for all possible schedules given interested
@@ -257,7 +258,7 @@ class Allocater:
         extra_courses = sorted(list(self.courses_set.difference(self.interested)))
         for course_number in extra_courses:
             self.add_interested_courses([course_number])
-            feasible, c1, c2 = self.check_feasible()
+            feasible, _, _ = self.check_feasible()
             if feasible:
                 self.all_possible.append(course_number)
             self.remove_interested_courses([course_number])
