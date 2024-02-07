@@ -2,7 +2,17 @@ import "./App.css";
 import React, { useState, useEffect } from "react";
 import { Course, CurrentCourse } from "./interfaces";
 import Calendar from "./components/calendar";
-import CourseDropDown from "./components/dropdown";
+import CourseDropDown from "./components/coursedropdown";
+import DepartmentDropDown from "./components/departmentdropdown";
+
+
+export const META_API = "/api/meta";
+export const COURSES_API = "/api/courses";
+export const CURRENT_INTERESTED_COURSES_API = "/api/courses/current" // add GET and POST
+export const NEXT_POSSIBLE_COURSES_API = "/api/courses/next"
+export const DEPARTMENTS_API = "/api/departments"
+export const REMOVE_INTEREST_COURSES_API = "/api/courses/remove"
+export const CURRENT_INTERESTED_DEPARTMENT_API = "/api/departments/current"
 
 interface Meta {
   numCols: number;
@@ -46,7 +56,7 @@ function api<T>(url: string): Promise<T> {
 
 async function fetchMeta(setMeta: React.Dispatch<React.SetStateAction<Meta>>) {
   try {
-    const data = await api<ServerMeta>("/api/meta");
+    const data = await api<ServerMeta>(META_API);
     let numCols = data.days + 1;
     let startTime = data.startTime * 60;
     let numRows = (data.endTime - data.startTime) * 4 + 1;
@@ -65,7 +75,7 @@ async function fetchCourses(
   setCourses: React.Dispatch<React.SetStateAction<Course[]>>
 ) {
   try {
-    const data = await api<Array<Course>>("/api/courses");
+    const data = await api<Array<Course>>(COURSES_API);
     setCourses(data);
   } catch (error) {
     console.error("Failed to fetch meta data:", error);
@@ -92,7 +102,7 @@ async function fetchCurrentInterested(
 ) {
   try {
     let currentCourses = Array<CurrentCourse>();
-    const data = await api<Array<Course>>("/api/current-interested");
+    const data = await api<Array<Course>>(CURRENT_INTERESTED_COURSES_API);
     data.forEach((course) => {
       course.timetable.forEach((timing) => {
         const {
@@ -136,10 +146,22 @@ async function fetchNextInterest(
   setNextInterest: React.Dispatch<React.SetStateAction<string[]>>
 ) {
   try {
-    const data = await api<Array<string>>("/api/next-interested");
+    const data = await api<Array<string>>(NEXT_POSSIBLE_COURSES_API);
     setNextInterest(data);
   } catch (error) {
     console.error("Failed to fetch next course data:", error);
+  }
+}
+
+async function fetchDepartments(
+  setDepartments: React.Dispatch<React.SetStateAction<string[]>>
+) {
+  try {
+    const data = await api<Array<string>>(DEPARTMENTS_API)
+    setDepartments(data);
+  }
+  catch (error) {
+    console.error("Failed to fetch departments:", error)
   }
 }
 
@@ -150,6 +172,7 @@ const App: React.FC = () => {
     numRows: 53,
   });
   let [currentCourses, setCurrentCourses] = useState<Array<CurrentCourse>>([]);
+  let [departments, setDepartments] = useState<Array<string>>([]);
   let [courses, setCourses] = useState<Array<Course>>([]);
   let [nextInterest, setNextInterest] = useState<Array<string>>([]);
 
@@ -173,6 +196,7 @@ const App: React.FC = () => {
     fetchMeta(setMeta);
     fetchCurrentInterested(meta, setCurrentCourses);
     fetchCourses(setCourses);
+    fetchDepartments(setDepartments);
     fetchNextInterest(setNextInterest);
   }, []);
 
@@ -187,8 +211,12 @@ const App: React.FC = () => {
       <div className="left-sidebar">
         <div className="course-selection">
           <div className="select-valid-courses">
+            <DepartmentDropDown
+              departments={departments}
+              handleClick={handleClick}
+            ></DepartmentDropDown>
             <CourseDropDown
-              interests={nextInterest}
+              interestedCourses={nextInterest}
               handleClick={handleClick}
             ></CourseDropDown>
           </div>
@@ -204,7 +232,7 @@ const App: React.FC = () => {
                     key={course.number}
                     title="Click to Remove"
                     onClick={() => {
-                      handleClick([course.number], "/api/not-interested");
+                      handleClick([course.number], REMOVE_INTEREST_COURSES_API);
                       const idx = currentCourses.indexOf(foundCard);
                       currentCourses.splice(idx, 1);
                       setCurrentCourses(currentCourses);
@@ -222,7 +250,7 @@ const App: React.FC = () => {
                 let courseList = currentCourses.map((card) => {
                   return card.id;
                 });
-                handleClick(courseList, "/api/not-interested");
+                handleClick(courseList, REMOVE_INTEREST_COURSES_API);
               }}
             >
               Remove All Selected

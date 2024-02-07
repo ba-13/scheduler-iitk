@@ -1,5 +1,4 @@
 from flask import Flask, request, send_from_directory, session
-from flask_cors import CORS
 from allocater import Allocater
 from threading import RLock
 
@@ -20,15 +19,24 @@ def courses_route():
     return courses
 
 
-@app.route("/api/current-interested")
+@app.route("/api/courses/current", methods=["GET"])
 def interested_route():
     init_interested = session["interested"]
     courses = []
     alc = Allocater(course_file, init_interested)
     for course in init_interested:
         courses.append(alc.courses[course])
-    print("Courses:", courses)
     return courses
+
+
+@app.route("/api/courses/current", methods=["POST"])
+def interestedButtonRoute():
+    data = request.json
+    button_value = data["value"]
+    print("Received add course:", button_value)
+    session["interested"].extend(button_value)
+    session.modified = True
+    return f"Added {button_value}"
 
 
 @app.route("/api/meta")
@@ -41,11 +49,11 @@ def meta_route():
     }
 
 
-@app.route("/api/not-interested", methods=["POST"])
+@app.route("/api/courses/remove", methods=["POST"])
 def notInterestedButtonRoute():
     data = request.json
     button_value = data["value"]
-    print("Received remove value:", button_value)
+    print("Received remove course:", button_value)
     session["interested"] = list(
         filter(lambda a: a not in button_value, session["interested"])
     )
@@ -53,34 +61,53 @@ def notInterestedButtonRoute():
     return f"Removed {button_value}"
 
 
-@app.route("/api/interested", methods=["POST"])
-def interestedButtonRoute():
-    data = request.json
-    button_value = data["value"]
-    print("Received add value:", button_value)
-    session["interested"].extend(button_value)
-    session.modified = True
-    print(session["interested"])
-    return f"Added {button_value}"
-
-
-@app.route("/api/next-interested")
+@app.route("/api/courses/next")
 def nextInterestRoute():
     init_interested = session["interested"]
     alc = Allocater(course_file, init_interested)
     alc_lock = RLock()
     with alc_lock:
-        result = alc.generate_compatible_courses_given_interested()
+        if "department" not in session.keys():
+            result = alc.generate_compatible_courses_given_interested()
+        else:
+            print("Department wise")
+            result = alc.generate_department_courses_given_interested(
+                session["department"]
+            )
     return result
+
+
+@app.route("/api/departments")
+def allDepartmentsRoute():
+    alc = Allocater(course_file)
+    return list(alc.departments)
+
+
+@app.route("/api/departments/current", methods=["POST"])
+def changeInterestedDepartment():
+    data = request.json
+    button_value = data["value"]
+    print("Received department:", button_value)
+    if len(button_value) != 1:
+        print(f"[ERR] Department sent is: {button_value}")
+        return None
+    else:
+        session["department"] = button_value[0]
+        session.modified = True
+        return session["department"]
+
+
+@app.route("/api/departments/current", methods=["GET"])
+def showInterestedDepartment():
+    if "department" not in session.keys():
+        return None
+    return session["department"]
 
 
 @app.route("/")
 def serve_html():
     if "interested" not in session.keys():
-        print("Init interested in serving /")
         session["interested"] = []
-    else:
-        print(f"Borrowing interested {session['interested']}")
     return send_from_directory(dist_path, "index.html")
 
 

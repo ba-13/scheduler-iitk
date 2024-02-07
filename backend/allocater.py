@@ -42,17 +42,18 @@ class Allocater:
     INDEX_TO_DAYS = {0: "M", 1: "T", 2: "W", 3: "Th", 4: "F"}
     NULL_STRING = "NA"
 
-    def __init__(self, json_path, init_interested: list = []) -> None:
+    def __init__(self, json_path, init_courses: list = []) -> None:
         self.courses: "dict[str, Course]" = {}
         self.courses_list: list[str] = []
         self.courses_set: set[str] = set()  # contains course_number
         self.course_to_idx: dict[str, int] = {}
+        self.courses_departmentwise: dict[str, set[str]] = {}
         self.interested: set[str] = set()  # contains course_number
-        self.add_interested_courses(init_interested)
         self.timings = -np.ones(len(self.DAYS_TO_INDEX) * 24 * 4, dtype=np.int16)
         self.credits_considered_: int = 0
         # used when generating for all possible schedules given interested
         self.all_possible: list[str] = []
+        self.departments: set[str] = set()
         self.minimum_credits = 27
         self.maximum_credits = 65
 
@@ -62,12 +63,18 @@ class Allocater:
         for idx, course in enumerate(parsed_json):
             for i, timing in enumerate(course["timetable"]):
                 course["timetable"][i] = self.readable_time_to_mins(timing)
-            course = Course.from_dict(course)
+            course: Course = Course.from_dict(course)
+            self.departments.add(course.department)
             self.courses[course.number] = course
             self.courses_list.append(course.number)
             self.courses_set.add(course.number)
             self.course_to_idx[course.number] = idx
+            if course.department not in self.courses_departmentwise.keys():
+                self.courses_departmentwise[course.department] = set([course.number])
+            else:
+                self.courses_departmentwise[course.department].add(course.number)
         del parsed_json
+        self.add_interested_courses(init_courses)
         self.interested_start_hour = 7
         self.interested_end_hour = 21
         logger.info(self.courses_list)
@@ -256,6 +263,27 @@ class Allocater:
         del self.all_possible
         self.all_possible = []
         extra_courses = sorted(list(self.courses_set.difference(self.interested)))
+        for course_number in extra_courses:
+            self.add_interested_courses([course_number])
+            feasible, _, _ = self.check_feasible()
+            if feasible:
+                self.all_possible.append(course_number)
+            self.remove_interested_courses([course_number])
+        return self.all_possible
+
+    def generate_department_courses_given_interested(self, curr_department):
+        del self.all_possible
+        self.all_possible = []
+        if curr_department not in self.departments:
+            logger.warning(
+                f"Changed invalid department from {curr_department} to {self.departments[0]}"
+            )
+            curr_department = self.departments[0]
+        extra_courses = sorted(
+            list(
+                self.courses_departmentwise[curr_department].difference(self.interested)
+            )
+        )
         for course_number in extra_courses:
             self.add_interested_courses([course_number])
             feasible, _, _ = self.check_feasible()

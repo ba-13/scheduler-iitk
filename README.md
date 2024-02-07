@@ -7,6 +7,7 @@ The major constraint on choosing courses are:
 
 - Courses must belong to the current semester
 - Chosen courses must not clash according to the timetable
+- Courses are distributed according to departments, which is another dropdown chosen before the course itself.
 
 ![preview](./assets/preview.png)
 
@@ -24,7 +25,6 @@ The major constraint on choosing courses are:
 ## Future work
 
 - The courses you select provides a prior to what kind of courses you would want to take up, which should be recommended first. Make the selection bar more intelligent.
-- The courses should be distributed according to departments, which should be another dropdown chosen before the course itself.
 
 ## References
 

@@ -1,25 +1,26 @@
 import React from "react";
 import "./dropdown.css";
+import { CURRENT_INTERESTED_COURSES_API } from "../App";
 
 interface CourseDropDownProps {
-  interests: Array<string>;
+  interestedCourses: Array<string>;
   handleClick: (value: Array<string>, api: string) => void;
 }
 
 const CourseDropDown: React.FC<CourseDropDownProps> = ({
-  interests,
+  interestedCourses,
   handleClick,
 }) => {
   return (
     <select name="select-valid-courses" id="select-valid-courses">
       <option key="null">Select Course</option>
-      {interests.map((uniqueCard) => {
+      {interestedCourses.map((interestedCourse) => {
         return (
           <option
-            onClick={() => handleClick([uniqueCard], "/api/interested")}
-            key={uniqueCard}
+            onClick={() => handleClick([interestedCourse], CURRENT_INTERESTED_COURSES_API)}
+            key={interestedCourse}
           >
-            {uniqueCard}
+            {interestedCourse}
           </option>
         );
       })}
