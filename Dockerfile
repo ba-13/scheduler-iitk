@@ -22,4 +22,4 @@ COPY ./backend/dist/ ./dist
 ENV PORT=3000
 EXPOSE 3000
 
-CMD [ "python3", "server.py" ]
+CMD [ "gunicorn", "-w 4", "server:app" ]
