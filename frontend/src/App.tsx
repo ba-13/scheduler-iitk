@@ -4,15 +4,21 @@ import { Course, CurrentCourse } from "./interfaces";
 import Calendar from "./components/calendar";
 import CourseDropDown from "./components/coursedropdown";
 import DepartmentDropDown from "./components/departmentdropdown";
-
+import { ThemeProvider, createTheme } from "@mui/material/styles";
 
 export const META_API = "/api/meta";
 export const COURSES_API = "/api/courses";
-export const CURRENT_INTERESTED_COURSES_API = "/api/courses/current" // add GET and POST
-export const NEXT_POSSIBLE_COURSES_API = "/api/courses/next"
-export const DEPARTMENTS_API = "/api/departments"
-export const REMOVE_INTEREST_COURSES_API = "/api/courses/remove"
-export const CURRENT_INTERESTED_DEPARTMENT_API = "/api/departments/current"
+export const CURRENT_INTERESTED_COURSES_API = "/api/courses/current"; // add GET and POST
+export const NEXT_POSSIBLE_COURSES_API = "/api/courses/next";
+export const DEPARTMENTS_API = "/api/departments";
+export const REMOVE_INTEREST_COURSES_API = "/api/courses/remove";
+export const CURRENT_INTERESTED_DEPARTMENT_API = "/api/departments/current";
+
+const darkTheme = createTheme({
+  palette: {
+    mode: "dark",
+  },
+});
 
 interface Meta {
   numCols: number;
@@ -40,7 +46,7 @@ function mins_decomposed(omins: number) {
   };
 }
 
-function api<T>(url: string): Promise<T> {
+export function api<T>(url: string): Promise<T> {
   return fetch(url)
     .then((response) => {
       if (!response.ok) {
@@ -81,15 +87,6 @@ async function fetchCourses(
     console.error("Failed to fetch meta data:", error);
   }
 }
-
-/*
-function departmentFromNumber(courseNumber: string) {
-  const val = courseNumber.match(/^[A-Z]+/);
-  if (val == null)
-    console.error(`Could not find department in ${courseNumber}`);
-  else return val[0];
-}
-*/
 
 const extractDigits = (str: string) => {
   const matches = str.match(/\d+/);
@@ -157,11 +154,10 @@ async function fetchDepartments(
   setDepartments: React.Dispatch<React.SetStateAction<string[]>>
 ) {
   try {
-    const data = await api<Array<string>>(DEPARTMENTS_API)
+    const data = await api<Array<string>>(DEPARTMENTS_API);
     setDepartments(data);
-  }
-  catch (error) {
-    console.error("Failed to fetch departments:", error)
+  } catch (error) {
+    console.error("Failed to fetch departments:", error);
   }
 }
 
@@ -197,16 +193,16 @@ const App: React.FC = () => {
     fetchCurrentInterested(meta, setCurrentCourses);
     fetchCourses(setCourses);
     fetchDepartments(setDepartments);
-    fetchNextInterest(setNextInterest);
   }, []);
 
   return (
-    <>
+    <ThemeProvider theme={darkTheme}>
       <div className="introduction">
         This is useful to check clashes between the courses that you want to opt
-        for! Add courses from "Select Course" dropdown, while removing them by
-        clicking their buttons. The dropdown would intelligently include only
-        those courses which don't clash with those already present.
+        for! <br /> Add courses by first "Select Department" then "Select
+        Course", while removing them by clicking their buttons. <br /> The
+        dropdown would intelligently include only those courses which don't
+        clash with those already present.
       </div>
       <div className="left-sidebar">
         <div className="course-selection">
@@ -256,6 +252,19 @@ const App: React.FC = () => {
               Remove All Selected
             </button>
           </div>
+          <div id="total-details">
+            Total Credits:{"\t"}
+            {courses.reduce((accCredits, course) => {
+              const foundCard = currentCourses.find(
+                (card) => card.id === course.number
+              );
+              if (foundCard) {
+                return accCredits + course.credit;
+              } else {
+                return accCredits;
+              }
+            }, 0)}
+          </div>
         </div>
         <div className="calendar-container">
           <Calendar
@@ -266,7 +275,7 @@ const App: React.FC = () => {
           ></Calendar>
         </div>
       </div>
-    </>
+    </ThemeProvider>
   );
 };
 

@@ -30,15 +30,11 @@
   border-bottom: 2px solid rgb(0, 255, 64);
 }
 
-#select-valid-courses {
-  margin-bottom: 2rem;
-}
-
 #remove-button {
   margin-top: 2rem;
   display: flex;
   flex-direction: column;
-  padding-inline: 3rem;
+  padding-inline: 5rem;
 }
 
 .line {
@@ -48,6 +44,14 @@
   margin: 1rem 0;
 }
 
+.course-selection-title {
+  font-size: 2rem;
+  padding-bottom: 1rem;
+}
+
+#total-details {
+  margin-top: 1rem;
+}
 /* tablet breakpoint */
 @media (max-width: 360px) {
   .left-sidebar {

@@ -22,6 +22,10 @@ select:focus {
   outline: 0;
 }
 
-.course-selection-title {
-  font-size: 2rem;
+.form-select {
+  width: 60%;
+}
+
+.select-valid {
+  margin-bottom: 1rem;
 }

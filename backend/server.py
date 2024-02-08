@@ -21,6 +21,8 @@ def courses_route():
 
 @app.route("/api/courses/current", methods=["GET"])
 def interested_route():
+    if "interested" not in session.keys():
+        session["interested"] = []
     init_interested = session["interested"]
     courses = []
     alc = Allocater(course_file, init_interested)
@@ -31,6 +33,8 @@ def interested_route():
 
 @app.route("/api/courses/current", methods=["POST"])
 def interestedButtonRoute():
+    if "interested" not in session.keys():
+        session["interested"] = []
     data = request.json
     button_value = data["value"]
     print("Received add course:", button_value)
@@ -51,6 +55,8 @@ def meta_route():
 
 @app.route("/api/courses/remove", methods=["POST"])
 def notInterestedButtonRoute():
+    if "interested" not in session.keys():
+        session["interested"] = []
     data = request.json
     button_value = data["value"]
     print("Received remove course:", button_value)
@@ -63,6 +69,8 @@ def notInterestedButtonRoute():
 
 @app.route("/api/courses/next")
 def nextInterestRoute():
+    if "interested" not in session.keys():
+        session["interested"] = []
     init_interested = session["interested"]
     alc = Allocater(course_file, init_interested)
     alc_lock = RLock()
@@ -101,7 +109,7 @@ def changeInterestedDepartment():
 def showInterestedDepartment():
     if "department" not in session.keys():
         return None
-    return session["department"]
+    return {"department": session["department"]}
 
 
 @app.route("/")
