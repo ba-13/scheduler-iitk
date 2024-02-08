@@ -155,6 +155,8 @@ async function fetchDepartments(
 ) {
   try {
     const data = await api<Array<string>>(DEPARTMENTS_API);
+    data.sort();
+
     setDepartments(data);
   } catch (error) {
     console.error("Failed to fetch departments:", error);
