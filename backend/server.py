@@ -1,6 +1,8 @@
-from flask import Flask, request, send_from_directory, session
+from flask import Flask, request, send_from_directory, session, render_template
 from allocater import Allocater
 from threading import RLock
+import os
+from subprocess import call
 
 app = Flask(__name__)
 # CORS(app)  # This will enable CORS for all routes
@@ -78,7 +80,6 @@ def nextInterestRoute():
         if "department" not in session.keys():
             result = alc.generate_compatible_courses_given_interested()
         else:
-            print("Department wise")
             result = alc.generate_department_courses_given_interested(
                 session["department"]
             )
@@ -110,6 +111,26 @@ def showInterestedDepartment():
     if "department" not in session.keys():
         return None
     return {"department": session["department"]}
+
+
+@app.route("/api/refresh-pdf", methods=["POST"])
+def updatePDFPost():
+    f = request.files["file"]
+    filename = f.filename
+    if "Course_Schedule_" not in filename:
+        return {"filename": filename, "upload": False}
+    try:
+        os.remove("./course-schedule.pdf")
+    except FileNotFoundError:
+        print("No current file found!")
+    f.save("course-schedule.pdf")
+    call(["python3", "read_pdf.py"])
+    return {"filename": f.filename, "upload": True}
+
+
+@app.route("/api/refresh-pdf", methods=["GET"])
+def updatePDFPage():
+    return send_from_directory(".", "upload_pdf.html")
 
 
 @app.route("/")

@@ -68,26 +68,37 @@ def seperate_course_details(input_str: str):
     return course_details, instr_split, credit
 
 
-reader = PyPDF2.PdfReader("./Course_Schedule_2023-24-2.pdf")
+print("[PyPDF2] Running PDF Parser")
+
+try:
+    reader = PyPDF2.PdfReader("./course-schedule.pdf")
+except Exception:
+    print("[PyPDF2] Error reading PDF! exiting")
+    exit(1)
 len_pages = len(reader.pages)
 
 entries = []
 for page in reader.pages:
     entries.append(page.extract_text())
+print("[PyPDF2]", entries[0][:60])
 
 number_match = re.compile(r"\n(\d+\s[A-Z].+?(?=\n\d+\s[A-Z]|\Z))", re.DOTALL)
 courses_raw = []
 for entry in entries:
     courses_raw.extend(number_match.findall(entry))
 
+if len(courses_raw) == 0:
+    print("[PyPDF2] Didn't find courses inside PDF, exiting")
+    exit(1)
 json_arr = []
-
+err_count = 0
 for course_raw in courses_raw:
     course_raw = course_raw.replace("\n", "")
     try:
         course, timings = seperate_timetable(course_raw)
         course_details, instr_details, credit = seperate_course_details(course)
     except Exception as err:
+        err_count += 1
         logger.error(f"Couldn't split {course_raw}: {err}")
         continue
     instr_details[-3] = remove_nested_parens(instr_details[-3])
@@ -105,5 +116,6 @@ for course_raw in courses_raw:
     json_arr.append(final_json)
 
 # print(json_arr)
+print(f"[PyPDF2] Parsed {len(json_arr)} courses, can't parse {err_count} courses")
 with open("all_courses.json", "w") as f:
     json.dump(json_arr, f)

@@ -1,7 +1,5 @@
-from tabulate import tabulate
 import time
 from dataclasses import dataclass, asdict
-import numpy as np
 import json
 import logging
 
@@ -49,7 +47,7 @@ class Allocater:
         self.course_to_idx: dict[str, int] = {}
         self.courses_departmentwise: dict[str, set[str]] = {}
         self.interested: set[str] = set()  # contains course_number
-        self.timings = -np.ones(len(self.DAYS_TO_INDEX) * 24 * 4, dtype=np.int16)
+        self.timings = None
         self.credits_considered_: int = 0
         # used when generating for all possible schedules given interested
         self.all_possible: list[str] = []
@@ -173,7 +171,7 @@ class Allocater:
             for idx in range(start_idx, end_idx):
                 self.timings[idx] = -1
 
-    def check_feasible(self) -> "tuple(bool, np.ndarray, str, str)":
+    def check_feasible(self):
         """Checks the list of interested courses if they are clashing or not
         checks all courses if no interested list provided
         creates a timings list in process
@@ -185,7 +183,7 @@ class Allocater:
         """
         if len(self.interested) == 0:
             logger.error("Found no interested courses, add to check. returning")
-        self.timings = -np.ones(len(self.DAYS_TO_INDEX) * 24 * 4, dtype=np.int16)
+        self.timings = [-1 for _ in range(len(self.DAYS_TO_INDEX) * 24 * 4)]
         self.credits_considered_ = 0
         for course_number in self.interested:
             # if course_number in self.timings_considered_:
@@ -197,36 +195,6 @@ class Allocater:
                 return (success, current_course, clashing_course)
 
         return True, self.NULL_STRING, self.NULL_STRING
-
-    def print_timings(self):
-        new_timings: np.ndarray = self.timings.reshape(len(self.DAYS_TO_INDEX), -1)
-        interested_array: list[list] = new_timings.T.tolist()
-        for idx, interval in enumerate(interested_array):
-            _, time_str = self.mins_to_readable_time(idx * 15)
-            interval.insert(0, time_str)
-        interested_array = interested_array[
-            self.interested_start_hour * 4 : self.interested_end_hour * 4 + 1
-        ]
-        for i, row in enumerate(interested_array):
-            for j, col in enumerate(row[1:]):
-                j += 1
-                if col == -1:
-                    row[j] = ""
-                    continue
-                if col == -2:
-                    row[j] = "CLASH"
-                    continue
-                row[j] = self.courses_list[col]
-        headers = list(self.DAYS_TO_INDEX.keys())
-        headers.insert(0, "TIME")
-        table = tabulate(
-            interested_array,
-            headers=headers,
-            tablefmt="grid",
-            numalign="center",
-            stralign="center",
-        )
-        print(table)
 
     def generate_all_possible__(self, extra_courses: list, current_idx: int):
         """Fills up self.all_possible with possible schedules, given interested
