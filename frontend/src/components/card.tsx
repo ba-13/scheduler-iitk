@@ -20,8 +20,8 @@ const CourseCard: React.FC<CourseCardProps> = ({
       className="course-card"
       style={{
         backgroundColor: color,
-        height: `calc(26px * ${span})`,
-        lineHeight: `calc(26px * ${span})`,
+        height: `calc(18px * ${span})`,
+        lineHeight: `calc(18px * ${span})`,
       }}
     >
       <div>{courseName}</div>

@@ -200,11 +200,11 @@ const App: React.FC = () => {
   return (
     <ThemeProvider theme={darkTheme}>
       <div className="introduction">
-        This is useful to check clashes between the courses that you want to opt
+        This is useful to avoid clashes between the courses that you want to opt
         for! <br /> Add courses by first "Select Department" then "Select
         Course", while removing them by clicking their buttons. <br /> The
-        dropdown would intelligently include only those courses which don't
-        clash with those already present.
+        dropdown would include only those courses which don't clash with those
+        already present.
       </div>
       <div className="left-sidebar">
         <div className="course-selection">

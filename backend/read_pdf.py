@@ -13,7 +13,7 @@ logging.basicConfig(
 logger = logging.getLogger(__name__)
 
 re_split_course_instructor = re.compile(r"\d+-\d+-\d+-\d+")
-re_split_course_timing = re.compile(r"iitk.ac.in\s*\([IO]\),*\s+(?=[A-Z]|$)", re.DOTALL)
+re_split_course_timing = re.compile(r"ac.in\s*\([IO]\),*\s+(?=[A-Z]|$)", re.DOTALL)
 re_find_timings = re.compile(r"(.+?)(\d\d:\d\d)\s*-\s*(\d\d:\d\d)")
 re_find_days = re.compile(r"(Th|M|T|W|F)")
 re_find_course_details = re.compile(r"^(\d+)\s+([A-Z]+)\s+(.*?)\(([A-Z]+\d+[A-Z]*)\)")
@@ -35,6 +35,7 @@ def remove_nested_parens(input_str):
 
 
 def seperate_timetable(input_str: str):
+    global err_count
     try:
         rest_time_split = re_split_course_timing.split(input_str)
         course, timing = rest_time_split[0], rest_time_split[1].strip()
@@ -49,6 +50,7 @@ def seperate_timetable(input_str: str):
         for day in days:
             timings.append(f"{day} {s}-{e}")
     if len(timings) == 0:
+        err_count -= 1
         raise ValueError(f"No timings found for {course}, skipping")
     return course, timings
 
@@ -99,7 +101,7 @@ for course_raw in courses_raw:
         course_details, instr_details, credit = seperate_course_details(course)
     except Exception as err:
         err_count += 1
-        logger.error(f"Couldn't split {course_raw}: {err}")
+        logger.error(f"{err}: Couldn't split {course_raw.strip()}")
         continue
     instr_details[-3] = remove_nested_parens(instr_details[-3])
     instr_details[-3] = re_split_types.findall(instr_details[-3])
