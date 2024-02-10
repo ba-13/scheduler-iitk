@@ -30,6 +30,7 @@ body {
 
 .time-cell,
 .day-cell {
+  color: white;
   background-color: darkblue;
 }
 

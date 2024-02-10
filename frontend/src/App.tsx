@@ -14,12 +14,6 @@ export const DEPARTMENTS_API = "/api/departments";
 export const REMOVE_INTEREST_COURSES_API = "/api/courses/remove";
 export const CURRENT_INTERESTED_DEPARTMENT_API = "/api/departments/current";
 
-const darkTheme = createTheme({
-  palette: {
-    mode: "dark",
-  },
-});
-
 interface Meta {
   numCols: number;
   startTime: number;
@@ -173,6 +167,16 @@ const App: React.FC = () => {
   let [departments, setDepartments] = useState<Array<string>>([]);
   let [courses, setCourses] = useState<Array<Course>>([]);
   let [nextInterest, setNextInterest] = useState<Array<string>>([]);
+
+  // Hack to handle light vs dark themes
+  const whitePrefers = window.matchMedia(
+    "(prefers-color-scheme: light)"
+  ).matches;
+  const darkTheme = createTheme({
+    palette: {
+      mode: whitePrefers ? "light" : "dark",
+    },
+  });
 
   const handleClick = async (value: Array<string>, api: string) => {
     try {
