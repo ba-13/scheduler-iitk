@@ -12,6 +12,7 @@ RUN pip install -r requirements.txt
 COPY ./backend/*.py ./
 COPY ./backend/upload_pdf.html ./
 COPY ./backend/all_courses.json ./
+COPY ./playground/course-schedule.pdf ./
 RUN mkdir ${APP}/dist
 COPY ./backend/dist/ ./dist
 

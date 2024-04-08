@@ -2,6 +2,13 @@ import PyPDF2
 import re
 import logging
 import json
+import argparse
+
+parser = argparse.ArgumentParser("Parse PDF to JSON")
+parser.add_argument(
+    "--file", type=str, default="./course-schedule.pdf", help="path to course pdf file"
+)
+args = parser.parse_args()
 
 logging.basicConfig(
     filename="./parse.log",
@@ -73,9 +80,9 @@ def seperate_course_details(input_str: str):
 print("[PyPDF2] Running PDF Parser")
 
 try:
-    reader = PyPDF2.PdfReader("./course-schedule.pdf")
-except Exception:
-    print("[PyPDF2] Error reading PDF! exiting")
+    reader = PyPDF2.PdfReader(args.file)
+except Exception as e:
+    print("[PyPDF2] Error reading PDF!", e)
     exit(1)
 len_pages = len(reader.pages)
 

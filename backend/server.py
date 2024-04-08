@@ -117,6 +117,7 @@ def showInterestedDepartment():
 def updatePDFPost():
     f = request.files["file"]
     filename = f.filename
+    print("Uploading", filename)
     if "Course_Schedule_" not in filename:
         return {"filename": filename, "upload": False}
     try:
@@ -124,6 +125,8 @@ def updatePDFPost():
     except FileNotFoundError:
         print("No current file found!")
     f.save("course-schedule.pdf")
+    print("Saving new course-schedule.pdf")
+    print("Generating json...")
     call(["python3", "read_pdf.py"])
     return {"filename": f.filename, "upload": True}
 
